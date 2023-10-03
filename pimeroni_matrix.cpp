@@ -1,6 +1,16 @@
 #include "global_includes.h"
 #include "pimeroni_matrix.h"
 
+#define PIMERONI_DEBUGGING
+
+#ifdef PIMERONI_DEBUGGING
+#define PIMERONI_DEBUG(e, ...)                  \
+    os_printf("[PIMERONI MATRIX DEBUGGING]: "); \
+    os_printf(e);                               \
+    os_printf("\n")
+#else
+#define PIMERONI_DEBUG(e, ...) (void)(e)
+#endif
 static const int PIMERONI_BYTES_PER_PIXEL = 3;
 static const int PIMERONI_WIDTH = 16;
 static const int PIMERONI_HEIGHT = 16;
@@ -20,6 +30,8 @@ static int os_pimeroni_init(void *ptr, int width, int height)
     _os_pimeroni_t *pimeroni = (_os_pimeroni_t *)ptr;
     if (pimeroni == NULL)
     {
+        Serial.println("failed to initialize matrix");
+        PIMERONI_DEBUG("Pimeroni null pointer error");
         return OS_RET_NULL_PTR;
     }
 
@@ -35,14 +47,16 @@ static int os_pimeroni_init(void *ptr, int width, int height)
         .bus = pimeroni->spi_bus,
     };
 
+    Serial.printf("SPI BUS PTR %d\n", pimeroni->spi_bus);
     int ret = os_spi_couple_device(init_params, &pimeroni->device);
-    return OS_RET_OK;
+    return ret;
 }
 
 static int os_pimeroni_set(void *ptr, int x, int y, uint8_t r, uint8_t g, uint8_t b)
 {
     if (x >= 16 | y >= 16)
     {
+        PIMERONI_DEBUG("Out of bounds pixel selection");
         return OS_RET_INVALID_PARAM;
     }
 
@@ -72,7 +86,7 @@ static int os_pimeroni_update(void *ptr)
 
     const size_t data_sent_out = sizeof(uint8_t) * PIMERONI_BYTES_PER_PIXEL * PIMERONI_WIDTH * PIMERONI_HEIGHT + 1;
     int ret = os_spi_send(&pimeroni->device, pimeroni->output_buffer, data_sent_out);
-    return OS_RET_OK;
+    return ret;
 }
 
 int os_init_pimeroni_matrix(os_ledmatrix_t *matrix, os_spi_t *spi_bus)
@@ -87,6 +101,9 @@ int os_init_pimeroni_matrix(os_ledmatrix_t *matrix, os_spi_t *spi_bus)
     init_params.update_func = os_pimeroni_update;
 
     init_params.matrix_ptr = (void *)malloc(sizeof(_os_pimeroni_t));
+    memset(init_params.matrix_ptr, 0, sizeof(_os_pimeroni_t));
+    _os_pimeroni_t *pimeroni = (_os_pimeroni_t *)init_params.matrix_ptr;
+    pimeroni->spi_bus = spi_bus;
 
     int ret = os_init_ledmatrix(init_params, matrix);
     return ret;
