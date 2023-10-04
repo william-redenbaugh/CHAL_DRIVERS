@@ -37,18 +37,16 @@ static int os_pimeroni_init(void *ptr, int width, int height)
 
     pimeroni->output_buffer[0] = PIMERONI_SOF;
 
-    os_device_init_params init_params;
-
     os_device_init_params params = {
         .dma_buf_size = PIMERONI_BYTES_PER_PIXEL * PIMERONI_WIDTH * PIMERONI_HEIGHT + 1,
         .spi_mode = 0,
         .cs_gpio = GPIO_NUM_9,
-        .clk = 2000000,
+        .clk = 200000,
         .bus = pimeroni->spi_bus,
     };
 
-    Serial.printf("SPI BUS PTR %d\n", pimeroni->spi_bus);
-    int ret = os_spi_couple_device(init_params, &pimeroni->device);
+    Serial.printf("SPI BUS Index PTR %d\n", pimeroni->spi_bus);
+    int ret = os_spi_couple_device(params, &pimeroni->device);
     return ret;
 }
 
@@ -68,6 +66,7 @@ static int os_pimeroni_set(void *ptr, int x, int y, uint8_t r, uint8_t g, uint8_
         return OS_RET_NULL_PTR;
     }
 
+    pimeroni->output_buffer[0] = PIMERONI_SOF;
     pimeroni->output_buffer[pos] = r;
     pimeroni->output_buffer[pos + 1] = g;
     pimeroni->output_buffer[pos + 2] = b;
@@ -100,8 +99,8 @@ int os_init_pimeroni_matrix(os_ledmatrix_t *matrix, os_spi_t *spi_bus)
     init_params.setpixel_func = os_pimeroni_set;
     init_params.update_func = os_pimeroni_update;
 
-    init_params.matrix_ptr = (void *)malloc(sizeof(_os_pimeroni_t));
-    memset(init_params.matrix_ptr, 0, sizeof(_os_pimeroni_t));
+    init_params.matrix_ptr = new _os_pimeroni_t;
+
     _os_pimeroni_t *pimeroni = (_os_pimeroni_t *)init_params.matrix_ptr;
     pimeroni->spi_bus = spi_bus;
 
