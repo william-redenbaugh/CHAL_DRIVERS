@@ -38,7 +38,7 @@ static int os_pimeroni_init(void *ptr, int width, int height)
     pimeroni->output_buffer[0] = PIMERONI_SOF;
 
     os_device_init_params params = {
-        .dma_buf_size = PIMERONI_BYTES_PER_PIXEL * PIMERONI_WIDTH * PIMERONI_HEIGHT + 1,
+        .dma_buf_size = sizeof(uint8_t) * (PIMERONI_WIDTH * PIMERONI_HEIGHT + 1),
         .spi_mode = 0,
         .cs_gpio = GPIO_NUM_9,
         .clk = 200000,
@@ -92,9 +92,9 @@ int os_init_pimeroni_matrix(os_ledmatrix_t *matrix, os_spi_t *spi_bus)
 {
 
     os_ledmatrix_init_t init_params;
-
     init_params.height = 16;
     init_params.width = 16;
+
     init_params.init_func = os_pimeroni_init;
     init_params.setpixel_func = os_pimeroni_set;
     init_params.update_func = os_pimeroni_update;
