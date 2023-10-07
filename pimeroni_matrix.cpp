@@ -41,7 +41,7 @@ static int os_pimeroni_init(void *ptr, int width, int height)
         .dma_buf_size = sizeof(uint8_t) * (PIMERONI_WIDTH * PIMERONI_HEIGHT + 1),
         .spi_mode = 0,
         .cs_gpio = GPIO_NUM_9,
-        .clk = 200000,
+        .clk = 8000000,
         .bus = pimeroni->spi_bus,
     };
 
