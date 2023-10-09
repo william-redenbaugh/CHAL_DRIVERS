@@ -40,7 +40,7 @@ static int os_pimeroni_init(void *ptr, int width, int height)
     os_device_init_params params = {
         .dma_buf_size = sizeof(uint8_t) * (PIMERONI_WIDTH * PIMERONI_HEIGHT + 1),
         .spi_mode = 0,
-        .cs_gpio = GPIO_NUM_9,
+        .cs_gpio = GPIO_NUM_16,
         .clk = 8000000,
         .bus = pimeroni->spi_bus,
     };
