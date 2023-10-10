@@ -54,7 +54,6 @@ static int os_pimeroni_set(void *ptr, int x, int y, uint8_t r, uint8_t g, uint8_
 {
     if (x >= 16 | y >= 16)
     {
-        PIMERONI_DEBUG("Out of bounds pixel selection");
         return OS_RET_INVALID_PARAM;
     }
 
