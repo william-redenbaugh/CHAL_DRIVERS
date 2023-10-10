@@ -52,7 +52,7 @@ static int os_pimeroni_init(void *ptr, int width, int height)
 
 static int os_pimeroni_set(void *ptr, int x, int y, uint8_t r, uint8_t g, uint8_t b)
 {
-    if (x >= 16 | y >= 16)
+    if (x >= 16 | y >= 16 | y < 0 | x < 0)
     {
         return OS_RET_INVALID_PARAM;
     }
