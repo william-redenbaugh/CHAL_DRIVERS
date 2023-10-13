@@ -35,6 +35,7 @@ static int os_pimeroni_init(void *ptr, int width, int height)
         return OS_RET_NULL_PTR;
     }
 
+    memset(pimeroni->output_buffer, 0, sizeof(pimeroni->output_buffer));
     pimeroni->output_buffer[0] = PIMERONI_SOF;
 
     os_device_init_params params = {
