@@ -4,12 +4,12 @@
 #define PIMERONI_DEBUGGING
 
 #ifdef PIMERONI_DEBUGGING
-#define PIMERONI_DEBUG(e, ...)                  \
+#define PIMERONI_DEBUG(...)                  \
     os_printf("[PIMERONI MATRIX DEBUGGING]: "); \
-    os_printf(e);                               \
+    os_printf(__VA_ARGS__);                               \
     os_printf("\n")
 #else
-#define PIMERONI_DEBUG(e, ...) (void)(e)
+#define PIMERONI_DEBUG(e, ...) ((void)0)
 #endif
 static const int PIMERONI_BYTES_PER_PIXEL = 3;
 static const int PIMERONI_WIDTH = 16;
@@ -46,14 +46,14 @@ static int os_pimeroni_init(void *ptr, int width, int height)
         .bus = pimeroni->spi_bus,
     };
 
-    Serial.printf("SPI BUS Index PTR %d\n", pimeroni->spi_bus);
+    os_printf("SPI BUS Index PTR %d\n", (int)pimeroni->spi_bus);
     int ret = os_spi_couple_device(params, &pimeroni->device);
     return ret;
 }
 
 static int os_pimeroni_set(void *ptr, int x, int y, uint8_t r, uint8_t g, uint8_t b)
 {
-    if (x >= 16 | y >= 16 | y < 0 | x < 0)
+    if ((x >= 16) | (y >= 16) | (y < 0) | (x < 0))
     {
         return OS_RET_INVALID_PARAM;
     }

@@ -164,7 +164,7 @@ static int os_sunfounder_i2c_init(void *ptr, int width, int height)
 
 static int os_sunfounder_i2c_set(void *ptr, int x, int y, uint8_t r, uint8_t g, uint8_t b)
 {
-    if (x >= 8 | y >= 8 | x < 0 | y < 0)
+    if ((x >= 8) | (y >= 8) | (x < 0) | (y < 0))
     {
         return OS_RET_INVALID_PARAM;
     }
