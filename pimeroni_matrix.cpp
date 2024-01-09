@@ -46,7 +46,7 @@ static int os_pimeroni_init(void *ptr, int width, int height)
         .bus = pimeroni->spi_bus,
     };
 
-    Serial.printf("SPI BUS Index PTR %d\n", (int)pimeroni->spi_bus);
+    os_printf("SPI BUS Index PTR %d\n", (int)pimeroni->spi_bus);
     int ret = os_spi_couple_device(params, &pimeroni->device);
     return ret;
 }
